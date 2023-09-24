@@ -17,9 +17,7 @@ import org.springframework.batch.test.context.SpringBatchTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -44,12 +42,8 @@ class attendanceBatchTest {
 
     @Test
     public void member_테이블의_수만큼_attendance_테이블에_삽입된다() throws Exception {
-        DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd");
-        LocalDate date = LocalDate.of(2023, 9, 22);
-        String formattedDate = date.format(FORMATTER);
-
         JobParameters jobParameters = new JobParametersBuilder()
-                .addString("date", formattedDate)
+                .addString("date", "20230922")
                 .toJobParameters();
 
         JobExecution jobExecution = jobLauncherTestUtils.launchJob(jobParameters);

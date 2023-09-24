@@ -1,5 +1,6 @@
 package attendance.batch.domain;
 
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -11,6 +12,7 @@ import java.sql.Time;
 @Entity
 @Table(name = "attendance")
 @NoArgsConstructor
+@Getter
 public class Attendance {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,13 +38,9 @@ public class Attendance {
     @Column(name = "attendance_modify_reason", columnDefinition = "text")
     private String attendanceModifyReason;
 
-    public Attendance(Member member, Date attendanceDate) {
+    public Attendance(Member member, Date attendanceDate, String attendanceState) {
         this.member = member;
         this.attendanceDate = attendanceDate;
-        this.attendanceState = getDefaultValue();
-    }
-
-    private static String getDefaultValue() {
-        return "결석";
+        this.attendanceState = attendanceState;
     }
 }

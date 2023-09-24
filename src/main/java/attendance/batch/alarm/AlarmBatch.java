@@ -1,12 +1,28 @@
 package attendance.batch.alarm;
 
+import attendance.batch.domain.Attendance;
+import attendance.batch.dto.NotificationDto;
+import attendance.batch.util.KafkaProducer;
+import attendance.batch.util.StringToDateType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.batch.item.ItemProcessor;
+import org.springframework.batch.item.ItemWriter;
+import org.springframework.batch.item.database.JpaPagingItemReader;
+import org.springframework.batch.item.database.builder.JpaPagingItemReaderBuilder;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.kafka.core.KafkaTemplate;
 
 import javax.persistence.EntityManagerFactory;
+import java.util.HashMap;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -14,14 +30,60 @@ import javax.persistence.EntityManagerFactory;
 public class AlarmBatch {
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
+    private final KafkaTemplate<String, String> kafkaTemplate;
     private final EntityManagerFactory emf;
-    private int chunkSize = 1000;
+    private final int chunkSize = 1000;
+    private final String defaultAttendanceState = "결석";
+    private final String messageType = "attendance";
 
+    @Value("${topicName}")
+    private String topicName;
 
+    // 매일 08:45분쯤 도는 배치
+    @Bean
+    public Job notificationJob() {
+        return jobBuilderFactory.get("notificationJob")
+                .start(notificationStep()).build();
+    }
+
+    @Bean
+    public Step notificationStep() {
+        return stepBuilderFactory.get("notificationStep")
+                .<Attendance, NotificationDto>chunk(chunkSize)
+                .reader(attendanceReader(null))
+                .processor(attendanceToNotificationDtoProcessor())
+                .writer(notificationWriter())
+                .build();
+    }
+
+    @Bean
+    @StepScope
+    public JpaPagingItemReader<Attendance> attendanceReader(@Value("#{jobParameters[date]}") String date) {
+        Map<String, Object> parameterValues = new HashMap<>();
+        parameterValues.put("date", StringToDateType.convertToSqlDate(date));
+        parameterValues.put("state", defaultAttendanceState);
+
+        return new JpaPagingItemReaderBuilder<Attendance>()
+                .name("attendanceReader")
+                .entityManagerFactory(emf)
+                .pageSize(chunkSize)
+                .queryString("SELECT a FROM Attendance a WHERE a.attendanceDate = :date AND a.attendanceState = :state ORDER BY a.attendanceId ASC")
+                .parameterValues(parameterValues)
+                .build();
+    }
+
+    @Bean
+    @StepScope
+    public ItemProcessor<Attendance, NotificationDto> attendanceToNotificationDtoProcessor() {
+        return attendance -> NotificationDto.builder()
+                .memberId(attendance.getMember().getMemberId())
+                .messageType(messageType)
+                .message(null)
+                .build();
+    }
+
+    @Bean
+    public ItemWriter<NotificationDto> notificationWriter() {
+        return items -> KafkaProducer.send(kafkaTemplate, topicName, items);
+    }
 }
-
-/*
-    8시 45분에 배치를 돌아서 출결 테이블을 조회하고 해당 날짜에 출석상태가 결석인 학생들에게 알림을 쏜다
-
-    (유저아이디, 메시지타입(attendance), 메시지명(?))
- */

@@ -27,8 +27,10 @@ public class AttendanceBatch {
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
     private final EntityManagerFactory emf;
-    private int chunkSize = 500;
+    private final int chunkSize = 500;
+    private final String defaultAttendanceState = "결석";
 
+    // 매일 12시 정각에 도는 배치
     @Bean
     public Job attendanceInsertJob() {
         return jobBuilderFactory.get("attendanceInsertJob")
@@ -58,7 +60,7 @@ public class AttendanceBatch {
     @Bean
     @StepScope
     public ItemProcessor<Member, Attendance> memberToAttendanceProcessor(@Value("#{jobParameters[date]}") String date) {
-        return member -> new Attendance(member, StringToDateType.convertToSqlDate(date));
+        return member -> new Attendance(member, StringToDateType.convertToSqlDate(date),defaultAttendanceState);
     }
 
     @Bean
