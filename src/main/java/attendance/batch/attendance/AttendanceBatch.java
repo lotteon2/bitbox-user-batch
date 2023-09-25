@@ -27,7 +27,8 @@ public class AttendanceBatch {
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
     private final EntityManagerFactory emf;
-    private final int chunkSize = 500;
+    @Value("${spring.jpa.properties.hibernate.jdbc.batch_size}")
+    private int chunkSize;
     private final String defaultAttendanceState = "결석";
 
     // 매일 12시 정각에 도는 배치
