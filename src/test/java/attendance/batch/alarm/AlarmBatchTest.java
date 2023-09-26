@@ -4,12 +4,9 @@ import attendance.batch.KafkaConsumerMock;
 import attendance.batch.TestBatchConfig;
 import attendance.batch.domain.Attendance;
 import attendance.batch.domain.Member;
-import attendance.batch.dto.NotificationDto;
 import attendance.batch.repository.AttendanceRepository;
 import attendance.batch.repository.MemberRepository;
 import attendance.batch.util.StringToDateType;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,9 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -44,20 +39,22 @@ class AlarmBatchTest {
     private AttendanceRepository attendanceRepository;
     @Autowired
     private KafkaConsumerMock kafkaConsumer;
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @BeforeEach
     public void insertData(){
-        Member member1 = new Member(1L, "최성훈", "csh", "seonghun7304@naver.com", "path", 0L, "1", LocalDateTime.now(),LocalDateTime.now(), false);
-        Member member2 = new Member(2L, "최성훈2", "csh2", "seonghun7305@naver.com", "path2", 1L, "2", LocalDateTime.now(),LocalDateTime.now(), false);
+        Member member1 = new Member("csh1",1L, "최성훈", "csh", "seonghun7304@naver.com", "path", 0L, "1", LocalDateTime.now(),LocalDateTime.now(), false);
+        Member member2 = new Member("csh2",2L, "최성훈2", "csh2", "seonghun7305@naver.com", "path2", 1L, "2", LocalDateTime.now(),LocalDateTime.now(), false);
+        Member member3 = new Member("csh3",3L, "최성훈3", "csh3", "seonghun7306@naver.com", "path3", 2L, "3", LocalDateTime.now(),LocalDateTime.now(), false);
         memberRepository.save(member1);
         memberRepository.save(member2);
+        memberRepository.save(member3);
 
         Attendance attendance1 = new Attendance(member1, StringToDateType.convertToSqlDate("20230922"),"결석");
         Attendance attendance2 = new Attendance(member2, StringToDateType.convertToSqlDate("20230922"),"출석");
+        Attendance attendance3 = new Attendance(member3, StringToDateType.convertToSqlDate("20230922"),"결석");
         attendanceRepository.save(attendance1);
         attendanceRepository.save(attendance2);
+        attendanceRepository.save(attendance3);
     }
 
     @Test
@@ -72,12 +69,6 @@ class AlarmBatchTest {
         kafkaConsumer.resetLatch(); // latch 초기화
         kafkaConsumer.getLatch().await(1, TimeUnit.SECONDS);
 
-        List<NotificationDto> notificationDtoList;
-        try {
-            notificationDtoList = objectMapper.readValue((String) kafkaConsumer.getPayload(), new TypeReference<>() {});
-        } catch (IOException ex) {
-            throw new RuntimeException("List<NotificationDto> 객체를 만드는데 실패했습니다.");
-        }
-        Assertions.assertEquals(notificationDtoList.size(),1);
+        Assertions.assertEquals(kafkaConsumer.getPayload().size(),2);
     }
 }

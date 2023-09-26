@@ -1,9 +1,9 @@
 package attendance.batch.alarm;
 
 import attendance.batch.domain.Attendance;
-import attendance.batch.dto.NotificationDto;
 import attendance.batch.util.KafkaProducer;
 import attendance.batch.util.StringToDateType;
+import io.github.bitbox.bitbox.dto.NotificationDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -76,14 +76,19 @@ public class AlarmBatch {
     @StepScope
     public ItemProcessor<Attendance, NotificationDto> attendanceToNotificationDtoProcessor() {
         return attendance -> NotificationDto.builder()
-                .memberId(attendance.getMember().getMemberId())
-                .messageType(messageType)
-                .message(null)
+                .notificationType(messageType)
+                .receiverId(attendance.getMember().getMemberId())
+                .boardId(null)
+                .senderNickname(null)
                 .build();
     }
 
     @Bean
     public ItemWriter<NotificationDto> notificationWriter() {
-        return items -> KafkaProducer.send(kafkaTemplate, topicName, items);
+        return items -> {
+            for (NotificationDto item : items) {
+                KafkaProducer.send(kafkaTemplate, topicName, item);
+            }
+        };
     }
 }

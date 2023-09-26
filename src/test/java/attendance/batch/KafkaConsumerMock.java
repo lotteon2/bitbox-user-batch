@@ -3,15 +3,17 @@ package attendance.batch;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 public class KafkaConsumerMock {
     private CountDownLatch latch = new CountDownLatch(1);
-    private Object payload;
+    private List<Object> payload = new ArrayList<>();
 
     @KafkaListener(topics = "${topicName}", groupId = "testConsumerGroup")
     public void receive(ConsumerRecord<?, ?> consumerRecord) {
-        payload = consumerRecord.value();
+        payload.add(consumerRecord.value());
         latch.countDown();
     }
 
@@ -23,7 +25,7 @@ public class KafkaConsumerMock {
         return latch;
     }
 
-    public Object getPayload() {
+    public List<Object> getPayload() {
         return payload;
     }
 }

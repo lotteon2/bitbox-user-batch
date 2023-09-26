@@ -13,9 +13,8 @@ import java.util.List;
 @Getter
 public class Member {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
-    private Long memberId;
+    private String memberId;
 
     @Column(name = "class_id")
     private Long classId;
@@ -50,7 +49,8 @@ public class Member {
     @Column(name = "is_deleted", nullable = false, columnDefinition = "boolean default false")
     private boolean isDeleted;
 
-    public Member(Long classId, String memberName, String memberNickname, String memberEmail, String memberProfileImg, Long memberCredit, String memberAuthority, LocalDateTime createdAt, LocalDateTime updatedAt, boolean isDeleted) {
+    public Member(String memberId, Long classId, String memberName, String memberNickname, String memberEmail, String memberProfileImg, Long memberCredit, String memberAuthority, LocalDateTime createdAt, LocalDateTime updatedAt, boolean isDeleted) {
+        this.memberId = memberId;
         this.classId = classId;
         this.memberName = memberName;
         this.memberNickname = memberNickname;

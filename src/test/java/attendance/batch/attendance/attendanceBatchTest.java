@@ -34,14 +34,21 @@ class attendanceBatchTest {
 
     @BeforeEach
     public void insertData(){
-        Member member1 = new Member(1L, "최성훈", "csh", "seonghun7304@naver.com", "path", 0L, "1", LocalDateTime.now(),LocalDateTime.now(), false);
-        Member member2 = new Member(2L, "최성훈2", "csh2", "seonghun7305@naver.com", "path2", 1L, "2", LocalDateTime.now(),LocalDateTime.now(), false);
+        Member member1 = new Member("csh1", 1L, "최성훈", "csh", "seonghun7304@naver.com", "path", 0L, "ADMIN", LocalDateTime.now(),LocalDateTime.now(), false);
+        Member member2 = new Member("csh2", 2L, "최성훈2", "csh2", "seonghun7305@naver.com", "path2", 1L, "TRAINEE", LocalDateTime.now(),LocalDateTime.now(), true);
+        Member member3 = new Member("csh3", 3L, "최성훈3", "csh3", "seonghun7306@naver.com", "path3", 2L, "TRAINEE", LocalDateTime.now(),LocalDateTime.now(), false);
+        Member member4 = new Member("csh4", 4L, "최성훈4", "csh4", "seonghun7307@naver.com", "path4", 3L, "TRAINEE", LocalDateTime.now(),LocalDateTime.now(), true);
+        Member member5 = new Member("csh5", 5L, "최성훈5", "csh5", "seonghun7308@naver.com", "path5", 4L, "TRAINEE", LocalDateTime.now(),LocalDateTime.now(), false);
+
         memberRepository.save(member1);
         memberRepository.save(member2);
+        memberRepository.save(member3);
+        memberRepository.save(member4);
+        memberRepository.save(member5);
     }
 
     @Test
-    public void member_테이블의_수만큼_attendance_테이블에_삽입된다() throws Exception {
+    public void member_테이블에서_삭제가안되었고_TRAINEE인학생의_수만큼_attendance_테이블에_삽입된다() throws Exception {
         JobParameters jobParameters = new JobParametersBuilder()
                 .addString("date", "20230922")
                 .toJobParameters();
@@ -49,8 +56,7 @@ class attendanceBatchTest {
         JobExecution jobExecution = jobLauncherTestUtils.launchJob(jobParameters);
 
         List<Attendance> attendances = (List<Attendance>) attendanceRepository.findAll();
-        List<Member> members = (List<Member>) memberRepository.findAll();
         assertThat(jobExecution.getStatus()).isEqualTo(BatchStatus.COMPLETED);
-        Assertions.assertEquals(attendances.size(), members.size());
+        Assertions.assertEquals(attendances.size(), 2);
     }
 }

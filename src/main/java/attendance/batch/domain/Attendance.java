@@ -7,10 +7,8 @@ import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Time;
 
-// ALTER TABLE `attendance` ADD UNIQUE `키명` ( `member_id` , `ATTENDANCE_DATE` )
-// 위의 alter가 가능은 한데 JPA는 알 수 없으므로 예외로 처리 됨
 @Entity
-@Table(name = "attendance")
+@Table(name = "attendance", uniqueConstraints = { @UniqueConstraint(columnNames = { "member_id", "attendance_date" }) })
 @NoArgsConstructor
 @Getter
 @SequenceGenerator(
