@@ -5,7 +5,7 @@ import attendance.batch.TestBatchConfig;
 import attendance.batch.domain.Attendance;
 import attendance.batch.domain.Member;
 import attendance.batch.repository.AttendanceRepository;
-import attendance.batch.repository.MemberRepository;
+import attendance.batch.repository.MemberRepositoryTest;
 import attendance.batch.util.StringToDateTimeConverter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,7 +34,7 @@ class AlarmBatchTest {
     @Autowired
     private JobLauncherTestUtils jobLauncherTestUtils;
     @Autowired
-    private MemberRepository memberRepository;
+    private MemberRepositoryTest memberRepositoryTest;
     @Autowired
     private AttendanceRepository attendanceRepository;
     @Autowired
@@ -45,9 +45,9 @@ class AlarmBatchTest {
         Member member1 = new Member("csh1",1L, "최성훈", "csh", "seonghun7304@naver.com", "path", 0L, "1", LocalDateTime.now(),LocalDateTime.now(), false);
         Member member2 = new Member("csh2",2L, "최성훈2", "csh2", "seonghun7305@naver.com", "path2", 1L, "2", LocalDateTime.now(),LocalDateTime.now(), false);
         Member member3 = new Member("csh3",3L, "최성훈3", "csh3", "seonghun7306@naver.com", "path3", 2L, "3", LocalDateTime.now(),LocalDateTime.now(), false);
-        memberRepository.save(member1);
-        memberRepository.save(member2);
-        memberRepository.save(member3);
+        memberRepositoryTest.save(member1);
+        memberRepositoryTest.save(member2);
+        memberRepositoryTest.save(member3);
 
         Attendance attendance1 = new Attendance(member1, StringToDateTimeConverter.convertToSqlDate("20230922"),"결석");
         Attendance attendance2 = new Attendance(member2, StringToDateTimeConverter.convertToSqlDate("20230922"),"출석");

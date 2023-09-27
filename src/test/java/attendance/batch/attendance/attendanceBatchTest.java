@@ -4,7 +4,7 @@ import attendance.batch.TestBatchConfig;
 import attendance.batch.domain.Attendance;
 import attendance.batch.domain.Member;
 import attendance.batch.repository.AttendanceRepository;
-import attendance.batch.repository.MemberRepository;
+import attendance.batch.repository.MemberRepositoryTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,7 +28,7 @@ class attendanceBatchTest {
     @Autowired
     private JobLauncherTestUtils jobLauncherTestUtils;
     @Autowired
-    private MemberRepository memberRepository;
+    private MemberRepositoryTest memberRepositoryTest;
     @Autowired
     private AttendanceRepository attendanceRepository;
 
@@ -40,11 +40,11 @@ class attendanceBatchTest {
         Member member4 = new Member("csh4", 4L, "최성훈4", "csh4", "seonghun7307@naver.com", "path4", 3L, "TRAINEE", LocalDateTime.now(),LocalDateTime.now(), true);
         Member member5 = new Member("csh5", 5L, "최성훈5", "csh5", "seonghun7308@naver.com", "path5", 4L, "TRAINEE", LocalDateTime.now(),LocalDateTime.now(), false);
 
-        memberRepository.save(member1);
-        memberRepository.save(member2);
-        memberRepository.save(member3);
-        memberRepository.save(member4);
-        memberRepository.save(member5);
+        memberRepositoryTest.save(member1);
+        memberRepositoryTest.save(member2);
+        memberRepositoryTest.save(member3);
+        memberRepositoryTest.save(member4);
+        memberRepositoryTest.save(member5);
     }
 
     @Test
