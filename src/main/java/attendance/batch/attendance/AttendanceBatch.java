@@ -2,7 +2,7 @@ package attendance.batch.attendance;
 
 import attendance.batch.domain.Attendance;
 import attendance.batch.domain.Member;
-import attendance.batch.util.StringToDateTimeConverter;
+import io.github.bitbox.bitbox.util.DateTimeUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -69,7 +69,7 @@ public class AttendanceBatch {
     @Bean
     @StepScope
     public ItemProcessor<Member, Attendance> memberToAttendanceProcessor(@Value("#{jobParameters[date]}") String date) {
-        return member -> new Attendance(member, StringToDateTimeConverter.convertToSqlDate(date),defaultAttendanceState);
+        return member -> new Attendance(member, DateTimeUtil.convertToSqlDate(date),defaultAttendanceState);
     }
 
     @Bean

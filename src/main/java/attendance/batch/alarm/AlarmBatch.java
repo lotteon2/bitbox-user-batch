@@ -2,8 +2,8 @@ package attendance.batch.alarm;
 
 import attendance.batch.domain.Attendance;
 import attendance.batch.util.KafkaProducer;
-import attendance.batch.util.StringToDateTimeConverter;
 import io.github.bitbox.bitbox.dto.NotificationDto;
+import io.github.bitbox.bitbox.util.DateTimeUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -60,7 +60,7 @@ public class AlarmBatch {
     @StepScope
     public JpaPagingItemReader<Attendance> attendanceReader(@Value("#{jobParameters[date]}") String date) {
         Map<String, Object> parameterValues = new HashMap<>();
-        parameterValues.put("date", StringToDateTimeConverter.convertToSqlDate(date));
+        parameterValues.put("date", DateTimeUtil.convertToSqlDate(date));
         parameterValues.put("state", defaultAttendanceState);
 
         return new JpaPagingItemReaderBuilder<Attendance>()

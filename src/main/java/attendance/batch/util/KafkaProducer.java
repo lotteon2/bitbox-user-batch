@@ -1,9 +1,9 @@
 package attendance.batch.util;
 
-import attendance.batch.exception.KafkaSubmitException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.bitbox.bitbox.dto.NotificationDto;
+import io.github.bitbox.bitbox.exception.KafkaSubmitException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 
