@@ -5,7 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class StringToDateType {
+public class StringToDateTimeConverter {
 
     public static Date convertToSqlDate(String date) {
         SimpleDateFormat inputFormatter = new SimpleDateFormat("yyyyMMdd");

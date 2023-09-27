@@ -2,7 +2,7 @@ package attendance.batch.alarm;
 
 import attendance.batch.domain.Attendance;
 import attendance.batch.util.KafkaProducer;
-import attendance.batch.util.StringToDateType;
+import attendance.batch.util.StringToDateTimeConverter;
 import io.github.bitbox.bitbox.dto.NotificationDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -60,7 +60,7 @@ public class AlarmBatch {
     @StepScope
     public JpaPagingItemReader<Attendance> attendanceReader(@Value("#{jobParameters[date]}") String date) {
         Map<String, Object> parameterValues = new HashMap<>();
-        parameterValues.put("date", StringToDateType.convertToSqlDate(date));
+        parameterValues.put("date", StringToDateTimeConverter.convertToSqlDate(date));
         parameterValues.put("state", defaultAttendanceState);
 
         return new JpaPagingItemReaderBuilder<Attendance>()

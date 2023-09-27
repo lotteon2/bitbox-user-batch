@@ -6,7 +6,7 @@ import attendance.batch.domain.Attendance;
 import attendance.batch.domain.Member;
 import attendance.batch.repository.AttendanceRepository;
 import attendance.batch.repository.MemberRepository;
-import attendance.batch.util.StringToDateType;
+import attendance.batch.util.StringToDateTimeConverter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,9 +49,9 @@ class AlarmBatchTest {
         memberRepository.save(member2);
         memberRepository.save(member3);
 
-        Attendance attendance1 = new Attendance(member1, StringToDateType.convertToSqlDate("20230922"),"결석");
-        Attendance attendance2 = new Attendance(member2, StringToDateType.convertToSqlDate("20230922"),"출석");
-        Attendance attendance3 = new Attendance(member3, StringToDateType.convertToSqlDate("20230922"),"결석");
+        Attendance attendance1 = new Attendance(member1, StringToDateTimeConverter.convertToSqlDate("20230922"),"결석");
+        Attendance attendance2 = new Attendance(member2, StringToDateTimeConverter.convertToSqlDate("20230922"),"출석");
+        Attendance attendance3 = new Attendance(member3, StringToDateTimeConverter.convertToSqlDate("20230922"),"결석");
         attendanceRepository.save(attendance1);
         attendanceRepository.save(attendance2);
         attendanceRepository.save(attendance3);
