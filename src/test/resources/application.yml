@@ -17,4 +17,4 @@ spring:
           batch_size: 500
   kafka:
     bootstrap-servers: localhost:7777
-topicName: "notification-test"
+topicName: notification-test
