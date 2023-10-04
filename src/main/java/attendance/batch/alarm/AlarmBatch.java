@@ -3,7 +3,6 @@ package attendance.batch.alarm;
 import attendance.batch.domain.Attendance;
 import io.github.bitbox.bitbox.dto.NotificationDto;
 import io.github.bitbox.bitbox.util.DateTimeUtil;
-import io.github.bitbox.bitbox.util.KafkaProducer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -30,7 +29,7 @@ import java.util.Map;
 public class AlarmBatch {
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
-    private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final KafkaTemplate<String, NotificationDto> kafkaTemplate;
     private final EntityManagerFactory emf;
     private final int chunkSize = 1000;
     private final String defaultAttendanceState = "결석";
@@ -87,7 +86,7 @@ public class AlarmBatch {
     public ItemWriter<NotificationDto> notificationWriter() {
         return items -> {
             for (NotificationDto item : items) {
-                KafkaProducer.send(kafkaTemplate, topicName, item);
+                kafkaTemplate.send(topicName, item);
             }
         };
     }
