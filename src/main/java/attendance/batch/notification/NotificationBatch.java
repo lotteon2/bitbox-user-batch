@@ -1,4 +1,4 @@
-package attendance.batch.alarm;
+package attendance.batch.notification;
 
 import attendance.batch.domain.Attendance;
 import io.github.bitbox.bitbox.dto.NotificationDto;
@@ -26,7 +26,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Slf4j
 @Configuration
-public class AlarmBatch {
+public class NotificationBatch {
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
     private final KafkaTemplate<String, NotificationDto> kafkaTemplate;

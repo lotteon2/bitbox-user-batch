@@ -1,4 +1,4 @@
-package attendance.batch.alarm;
+package attendance.batch.notification;
 
 import attendance.batch.KafkaConsumerMock;
 import attendance.batch.TestBatchConfig;
@@ -26,11 +26,11 @@ import java.util.concurrent.TimeUnit;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBatchTest
-@SpringBootTest(classes = {AlarmBatch.class, TestBatchConfig.class, KafkaConsumerMock.class})
+@SpringBootTest(classes = {NotificationBatch.class, TestBatchConfig.class, KafkaConsumerMock.class})
 @EmbeddedKafka( partitions = 1,
                 brokerProperties = { "listeners=PLAINTEXT://localhost:7777"},
                 ports = {7777})
-class AlarmBatchTest {
+class NotificationBatchTest {
     @Autowired
     private JobLauncherTestUtils jobLauncherTestUtils;
     @Autowired
