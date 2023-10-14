@@ -5,6 +5,7 @@ import attendance.batch.domain.Attendance;
 import attendance.batch.domain.Member;
 import attendance.batch.repository.AttendanceRepository;
 import attendance.batch.repository.MemberRepositoryTest;
+import io.github.bitbox.bitbox.enums.AuthorityType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,13 +19,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBatchTest
 @SpringBootTest(classes = {AttendanceBatch.class, TestBatchConfig.class})
-class attendanceBatchTest {
+class AttendanceBatchTest {
     @Autowired
     private JobLauncherTestUtils jobLauncherTestUtils;
     @Autowired
@@ -34,17 +36,15 @@ class attendanceBatchTest {
 
     @BeforeEach
     public void insertData(){
-        Member member1 = new Member("csh1", 1L, "최성훈", "csh", "seonghun7304@naver.com", "path", 0L, "ADMIN", LocalDateTime.now(),LocalDateTime.now(), false);
-        Member member2 = new Member("csh2", 2L, "최성훈2", "csh2", "seonghun7305@naver.com", "path2", 1L, "TRAINEE", LocalDateTime.now(),LocalDateTime.now(), true);
-        Member member3 = new Member("csh3", 3L, "최성훈3", "csh3", "seonghun7306@naver.com", "path3", 2L, "TRAINEE", LocalDateTime.now(),LocalDateTime.now(), false);
-        Member member4 = new Member("csh4", 4L, "최성훈4", "csh4", "seonghun7307@naver.com", "path4", 3L, "TRAINEE", LocalDateTime.now(),LocalDateTime.now(), true);
-        Member member5 = new Member("csh5", 5L, "최성훈5", "csh5", "seonghun7308@naver.com", "path5", 4L, "TRAINEE", LocalDateTime.now(),LocalDateTime.now(), false);
+        List<Member> members = new ArrayList<>();
 
-        memberRepositoryTest.save(member1);
-        memberRepositoryTest.save(member2);
-        memberRepositoryTest.save(member3);
-        memberRepositoryTest.save(member4);
-        memberRepositoryTest.save(member5);
+        members.add(new Member("csh1", 1L, "csh", "seonghun7304@naver.com", "path", 0L, AuthorityType.ADMIN,  false));
+        members.add(new Member("csh2", 2L, "csh2", "seonghun7305@naver.com", "path2", 1L,AuthorityType.TRAINEE, true));
+        members.add(new Member("csh3", 3L, "csh3", "seonghun7306@naver.com", "path3", 2L, AuthorityType.TRAINEE, false));
+        members.add(new Member("csh4", 4L, "csh4", "seonghun7307@naver.com", "path4", 3L, AuthorityType.TRAINEE,  true));
+        members.add(new Member("csh5", 5L, "csh5", "seonghun7308@naver.com", "path5", 4L, AuthorityType.TRAINEE,  false));
+
+        memberRepositoryTest.saveAll(members);
     }
 
     @Test

@@ -2,7 +2,9 @@ package attendance.batch.attendance;
 
 import attendance.batch.domain.Attendance;
 import attendance.batch.domain.Member;
-import io.github.bitbox.bitbox.util.DateTimeUtil;
+import attendance.util.DateUtil;
+import io.github.bitbox.bitbox.enums.AttendanceStatus;
+import io.github.bitbox.bitbox.enums.AuthorityType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -23,7 +25,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RequiredArgsConstructor
-@Slf4j
 @Configuration
 public class AttendanceBatch {
     private final JobBuilderFactory jobBuilderFactory;
@@ -31,8 +32,8 @@ public class AttendanceBatch {
     private final EntityManagerFactory emf;
     @Value("${spring.jpa.properties.hibernate.jdbc.batch_size}")
     private int chunkSize;
-    private final String defaultAttendanceState = "결석";
-    private final String defaultMemberAuthority = "TRAINEE";
+    private final AttendanceStatus DEFAULT_ATTENDANCE_STATE = AttendanceStatus.ABSENT;
+    private final AuthorityType DEFAULT_MEMBER_AUTHORITY = AuthorityType.TRAINEE;
 
     // 매일 12시 정각에 도는 배치
     @Bean
@@ -55,7 +56,7 @@ public class AttendanceBatch {
     public JpaPagingItemReader<Member> memberDbItemReader() {
         Map<String, Object> params = new HashMap<>();
         params.put("isDeleted", false);
-        params.put("memberAuthority", defaultMemberAuthority);
+        params.put("memberAuthority", DEFAULT_MEMBER_AUTHORITY);
 
         return new JpaPagingItemReaderBuilder<Member>()
                 .name("member_dbItemReader")
@@ -69,7 +70,11 @@ public class AttendanceBatch {
     @Bean
     @StepScope
     public ItemProcessor<Member, Attendance> memberToAttendanceProcessor(@Value("#{jobParameters[date]}") String date) {
-        return member -> new Attendance(member, DateTimeUtil.convertToSqlDate(date),defaultAttendanceState);
+        return member -> Attendance.builder()
+                .member(member)
+                .attendanceDate(DateUtil.convertToLocalDate(date))
+                .attendanceState(DEFAULT_ATTENDANCE_STATE)
+                .build();
     }
 
     @Bean

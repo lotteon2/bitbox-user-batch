@@ -1,8 +1,9 @@
 package attendance.batch.notification;
 
 import attendance.batch.domain.Attendance;
+import attendance.util.DateUtil;
 import io.github.bitbox.bitbox.dto.NotificationDto;
-import io.github.bitbox.bitbox.util.DateTimeUtil;
+import io.github.bitbox.bitbox.enums.AttendanceStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -32,7 +33,7 @@ public class NotificationBatch {
     private final KafkaTemplate<String, NotificationDto> kafkaTemplate;
     private final EntityManagerFactory emf;
     private final int chunkSize = 1000;
-    private final String defaultAttendanceState = "결석";
+    private final AttendanceStatus DEFAULT_ATTENDANCE_STATE = AttendanceStatus.ABSENT;
     private final String messageType = "attendance";
 
     @Value("${topicName}")
@@ -59,8 +60,8 @@ public class NotificationBatch {
     @StepScope
     public JpaPagingItemReader<Attendance> attendanceReader(@Value("#{jobParameters[date]}") String date) {
         Map<String, Object> parameterValues = new HashMap<>();
-        parameterValues.put("date", DateTimeUtil.convertToSqlDate(date));
-        parameterValues.put("state", defaultAttendanceState);
+        parameterValues.put("date", DateUtil.convertToLocalDate(date));
+        parameterValues.put("state", DEFAULT_ATTENDANCE_STATE);
 
         return new JpaPagingItemReaderBuilder<Attendance>()
                 .name("attendanceReader")

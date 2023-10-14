@@ -1,29 +1,33 @@
 package attendance.batch.domain;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import attendance.batch.common.BaseEntity;
+import io.github.bitbox.bitbox.enums.AuthorityType;
+import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
-@Table(name = "member")
-@NoArgsConstructor
 @Getter
-public class Member {
+@Setter
+@Table(name = "member")
+@DynamicInsert
+@DynamicUpdate
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Member extends BaseEntity {
     @Id
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @Column(name = "member_id")
     private String memberId;
 
     @Column(name = "class_id")
     private Long classId;
-
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<Attendance> attendances;
-
-    @Column(name = "member_name", nullable = false)
-    private String memberName;
 
     @Column(name = "member_nickname", nullable = false)
     private String memberNickname;
@@ -31,35 +35,30 @@ public class Member {
     @Column(name = "member_email", nullable = false)
     private String memberEmail;
 
-    @Column(name = "member_profile_img", nullable = false)
+    @ColumnDefault("'https://mblogthumb-phinf.pstatic.net/MjAyMDExMDFfMTgy/MDAxNjA0MjI4ODc1NDMw.Ex906Mv9nnPEZGCh4SREknadZvzMO8LyDzGOHMKPdwAg.ZAmE6pU5lhEdeOUsPdxg8-gOuZrq_ipJ5VhqaViubI4g.JPEG.gambasg/%EC%9C%A0%ED%8A%9C%EB%B8%8C_%EA%B8%B0%EB%B3%B8%ED%94%84%EB%A1%9C%ED%95%84_%ED%95%98%EB%8A%98%EC%83%89.jpg?type=w800'")
+    @Column(name = "member_profile_img", nullable = false, columnDefinition = "LONGTEXT")
     private String memberProfileImg;
 
-    @Column(name = "member_credit", nullable = false, columnDefinition = "bigint default 0")
-    private Long memberCredit;
+    @ColumnDefault("0")
+    @Column(name = "member_credit", nullable = false)
+    private long memberCredit;
 
+    @Enumerated(EnumType.STRING)
+    @ColumnDefault("'GENERAL'")
     @Column(name = "member_authority", nullable = false)
-    private String memberAuthority;
+    private AuthorityType memberAuthority;
 
-    @Column(name = "created_at", nullable = false, columnDefinition = "timestamp default current_timestamp")
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-
-    @Column(name = "is_deleted", nullable = false, columnDefinition = "boolean default false")
+    @ColumnDefault("false")
+    @Column(name = "deleted", nullable = false, columnDefinition = "TINYINT(1)")
     private boolean isDeleted;
 
-    public Member(String memberId, Long classId, String memberName, String memberNickname, String memberEmail, String memberProfileImg, Long memberCredit, String memberAuthority, LocalDateTime createdAt, LocalDateTime updatedAt, boolean isDeleted) {
-        this.memberId = memberId;
+    public Member(Long classId, String memberNickname, String memberEmail, String memberProfileImg, long memberCredit, AuthorityType memberAuthority, boolean isDeleted) {
         this.classId = classId;
-        this.memberName = memberName;
         this.memberNickname = memberNickname;
         this.memberEmail = memberEmail;
         this.memberProfileImg = memberProfileImg;
         this.memberCredit = memberCredit;
         this.memberAuthority = memberAuthority;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
         this.isDeleted = isDeleted;
     }
 }

@@ -1,8 +1,11 @@
 package attendance.batch.repository;
 
 import attendance.batch.domain.Attendance;
-import org.springframework.data.repository.CrudRepository;
+import io.github.bitbox.bitbox.enums.AttendanceStatus;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface AttendanceRepository extends CrudRepository<Attendance, Long> {
+import java.util.List;
 
+public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
+    List<Attendance> findByAttendanceState(AttendanceStatus attendanceState);
 }
