@@ -1,6 +1,6 @@
 spring:
   config:
-    import: ${CONFIG_SERVER}
+    import: optional:configserver:http://localhost:18888
   cloud:
     config:
       name: user-batch-service
