@@ -26,6 +26,7 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 @Configuration
+@Slf4j
 public class AttendanceBatch {
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
@@ -70,6 +71,7 @@ public class AttendanceBatch {
     @Bean
     @StepScope
     public ItemProcessor<Member, Attendance> memberToAttendanceProcessor(@Value("#{jobParameters[date]}") String date) {
+        log.info("parameter = {}",date);
         return member -> Attendance.builder()
                 .member(member)
                 .attendanceDate(DateUtil.convertToLocalDate(date))

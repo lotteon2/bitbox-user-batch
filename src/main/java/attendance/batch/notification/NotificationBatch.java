@@ -4,6 +4,7 @@ import attendance.batch.domain.Attendance;
 import attendance.util.DateUtil;
 import io.github.bitbox.bitbox.dto.NotificationDto;
 import io.github.bitbox.bitbox.enums.AttendanceStatus;
+import io.github.bitbox.bitbox.enums.NotificationType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -34,7 +35,8 @@ public class NotificationBatch {
     private final EntityManagerFactory emf;
     private final int chunkSize = 1000;
     private final AttendanceStatus DEFAULT_ATTENDANCE_STATE = AttendanceStatus.ABSENT;
-    private final String messageType = "attendance";
+
+    private final NotificationType messageType = NotificationType.ATTENDANCE;
 
     @Value("${topicName}")
     private String topicName;
