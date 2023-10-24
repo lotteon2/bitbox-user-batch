@@ -5,7 +5,7 @@ ARG PROFILE
 ENV USE_PROFILE=$PROFILE
 ENV CONFIG_SERVER ""
 ENV ENCRYPT_KEY ""
-ENV job.names ""
+ENV job.name ""
 ENV date ""
 
 COPY app.jar /app.jar
