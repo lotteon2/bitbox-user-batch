@@ -9,9 +9,5 @@ ENV job.name ""
 ENV date ""
 
 COPY app.jar /app.jar
-COPY entrypoint.sh /entrypoint.sh
 
-RUN chmod +x entrypoint.sh
-
-# CMD ["java", "-Dspring.profiles.active=${USE_PROFILE}", "-Duser.timezone=Asia/Seoul", "-jar", "./app.jar"]
-CMD ["./entrypoint.sh"]
+CMD ["java", "-Dspring.profiles.active=${USE_PROFILE}", "-Duser.timezone=Asia/Seoul", "--job.name={job.name} date={date}", "-jar", "./app.jar"]
