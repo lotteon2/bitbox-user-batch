@@ -5,9 +5,9 @@ ARG PROFILE
 ENV USE_PROFILE=$PROFILE
 ENV CONFIG_SERVER ""
 ENV ENCRYPT_KEY ""
-ENV JOB.NAME ""
-ENV DATE ""
+ENV job.names ""
+ENV date ""
 
 COPY app.jar /app.jar
 
-CMD ["java", "-Dspring.profiles.active=${USE_PROFILE}", "-Duser.timezone=Asia/Seoul", "--spring.batch.job.names=subscriptionExpirationJob", "-jar", "./app.jar"]
+CMD ["java", "-Dspring.profiles.active=${USE_PROFILE}", "-Duser.timezone=Asia/Seoul", "-jar", "./app.jar"]
