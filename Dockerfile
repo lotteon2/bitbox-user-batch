@@ -10,4 +10,5 @@ ENV ENCRYPT_KEY ""
 
 COPY app.jar /app.jar
 
-CMD ["java", "-Dspring.profiles.active=${USE_PROFILE}", "-Duser.timezone=Asia/Seoul", "-jar", "./app.jar"]
+#CMD ["java", "-Dspring.profiles.active=${USE_PROFILE}", "-Duser.timezone=Asia/Seoul", "-jar", "./app.jar"]
+CMD ["java -jar -Dspring.profiles.active=${USE_PROFILE} -Duser.timezone=Asia/Seoul", "./app.jar"]
