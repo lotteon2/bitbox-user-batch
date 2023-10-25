@@ -91,7 +91,7 @@ public class AbsentBatch {
     public PagingQueryProvider createQueryProvider() throws Exception {
         SqlPagingQueryProviderFactoryBean queryProvider = new SqlPagingQueryProviderFactoryBean();
         queryProvider.setDataSource(dataSource);
-        queryProvider.setSelectClause("attendance_id, attendance_date, attendance_modify_reason, attendance_state, entrance_time, quit_time, member_id");
+        queryProvider.setSelectClause("attendance_id, attendance_date, attendance_modify_reason, attendance_state, entrace_time, quit_time, member_id");
         queryProvider.setFromClause("attendance");
         queryProvider.setWhereClause("attendance_state = :attendanceState and quit_time IS NULL");
 
