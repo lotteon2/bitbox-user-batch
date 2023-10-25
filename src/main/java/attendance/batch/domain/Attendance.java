@@ -38,7 +38,7 @@ public class Attendance {
     @Column(name = "attendance_date", nullable = false)
     private LocalDate attendanceDate;
 
-    @Column(name = "entrance_time")
+    @Column(name = "entrace_time")
     private LocalTime entranceTime;
 
     @Column(name = "quit_time")
