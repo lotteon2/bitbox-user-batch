@@ -81,6 +81,7 @@ public class NotificationBatch {
                 .notificationType(messageType)
                 .receiverId(attendance.getMember().getMemberId())
                 .boardId(null)
+                .boardType(null)
                 .senderNickname(null)
                 .build();
     }
