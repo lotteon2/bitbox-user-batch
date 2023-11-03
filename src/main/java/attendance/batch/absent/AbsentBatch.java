@@ -3,7 +3,6 @@ package attendance.batch.absent;
 import attendance.batch.domain.Attendance;
 import io.github.bitbox.bitbox.enums.AttendanceStatus;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
@@ -25,7 +24,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RequiredArgsConstructor
-@Slf4j
 @Configuration
 public class AbsentBatch {
     private final JobBuilderFactory jobBuilderFactory;
