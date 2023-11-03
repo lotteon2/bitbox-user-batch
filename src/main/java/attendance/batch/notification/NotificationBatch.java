@@ -6,7 +6,6 @@ import io.github.bitbox.bitbox.dto.NotificationDto;
 import io.github.bitbox.bitbox.enums.AttendanceStatus;
 import io.github.bitbox.bitbox.enums.NotificationType;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
@@ -26,7 +25,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RequiredArgsConstructor
-@Slf4j
 @Configuration
 public class NotificationBatch {
     private final JobBuilderFactory jobBuilderFactory;
